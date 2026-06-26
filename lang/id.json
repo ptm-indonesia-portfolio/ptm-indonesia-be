@@ -1,0 +1,42 @@
+[
+  {
+    "id": "health.success",
+    "translation": "Layanan berjalan dengan baik."
+  },
+  {
+    "id": "health.failed",
+    "translation": "Layanan sedang bermasalah."
+  },
+  {
+    "id": "error.internal_server",
+    "translation": "Terjadi kesalahan pada server."
+  },
+  {
+    "id": "error.rate_limit",
+    "translation": "Terlalu banyak permintaan."
+  },
+  {
+    "id": "error.unauthorized",
+    "translation": "Tidak memiliki akses."
+  },
+  {
+    "id": "error.forbidden_login",
+    "translation": "Akun ini tidak diizinkan untuk login."
+  },
+  {
+    "id": "auth.google_login_url",
+    "translation": "URL login Google berhasil dibuat."
+  },
+  {
+    "id": "auth.current_user",
+    "translation": "Data user saat ini berhasil diambil."
+  },
+  {
+    "id": "auth.refreshed",
+    "translation": "Session berhasil diperbarui."
+  },
+  {
+    "id": "auth.logged_out",
+    "translation": "Berhasil logout."
+  }
+]

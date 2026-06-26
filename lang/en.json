@@ -1,0 +1,42 @@
+[
+  {
+    "id": "health.success",
+    "translation": "Service is healthy."
+  },
+  {
+    "id": "health.failed",
+    "translation": "Service is unhealthy."
+  },
+  {
+    "id": "error.internal_server",
+    "translation": "Internal server error."
+  },
+  {
+    "id": "error.rate_limit",
+    "translation": "Too many requests."
+  },
+  {
+    "id": "error.unauthorized",
+    "translation": "Unauthorized."
+  },
+  {
+    "id": "error.forbidden_login",
+    "translation": "This account is not allowed to log in."
+  },
+  {
+    "id": "auth.google_login_url",
+    "translation": "Google login URL generated successfully."
+  },
+  {
+    "id": "auth.current_user",
+    "translation": "Current user fetched successfully."
+  },
+  {
+    "id": "auth.refreshed",
+    "translation": "Session refreshed successfully."
+  },
+  {
+    "id": "auth.logged_out",
+    "translation": "Logged out successfully."
+  }
+]

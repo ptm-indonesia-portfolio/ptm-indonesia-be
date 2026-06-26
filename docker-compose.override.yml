@@ -1,0 +1,6 @@
+services:
+  app:
+    restart: "no"
+
+  db:
+    restart: "no"

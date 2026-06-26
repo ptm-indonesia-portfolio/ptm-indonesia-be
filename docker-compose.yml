@@ -1,0 +1,91 @@
+name: ptm-indonesia-be
+
+services:
+  app:
+    container_name: ptm_indonesia_be
+    build:
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      - ./logs:/app/logs
+    environment:
+      APP_NAME: ${APP_NAME:-PTM Indonesia API}
+      APP_ENV: ${APP_ENV:-development}
+      APP_HOST: ${APP_HOST:-0.0.0.0}
+      APP_PORT: ${APP_PORT:-9100}
+      APP_READ_TIMEOUT_SECONDS: ${APP_READ_TIMEOUT_SECONDS:-10}
+      APP_WRITE_TIMEOUT_SECONDS: ${APP_WRITE_TIMEOUT_SECONDS:-10}
+      APP_IDLE_TIMEOUT_SECONDS: ${APP_IDLE_TIMEOUT_SECONDS:-60}
+      APP_SHUTDOWN_TIMEOUT_SECONDS: ${APP_SHUTDOWN_TIMEOUT_SECONDS:-10}
+      APP_TIMEZONE: ${APP_TIMEZONE:-Asia/Jakarta}
+      APP_DEFAULT_LANGUAGE: ${APP_DEFAULT_LANGUAGE:-id}
+      APP_FALLBACK_LANGUAGE: ${APP_FALLBACK_LANGUAGE:-en}
+      DB_HOST: ${DB_HOST_DOCKER:-db}
+      DB_PORT: ${DB_PORT:-5432}
+      DB_NAME: ${DB_NAME:-ptm_indonesia}
+      DB_USER: ${DB_USER:-postgres}
+      DB_PASSWORD: ${DB_PASSWORD:-postgres}
+      DB_SSLMODE: ${DB_SSLMODE:-disable}
+      DB_TIMEZONE: ${DB_TIMEZONE:-Asia/Jakarta}
+      DB_MAX_IDLE_CONNS: ${DB_MAX_IDLE_CONNS:-10}
+      DB_MAX_OPEN_CONNS: ${DB_MAX_OPEN_CONNS:-25}
+      DB_CONN_MAX_LIFETIME_MINUTES: ${DB_CONN_MAX_LIFETIME_MINUTES:-30}
+      DB_HEALTH_CHECK_TIMEOUT_SECONDS: ${DB_HEALTH_CHECK_TIMEOUT_SECONDS:-3}
+      LOG_FILE_PATH: ${LOG_FILE_PATH:-logs/app.log}
+      LOG_LEVEL: ${LOG_LEVEL:-error}
+      MIGRATION_SOURCE: ${MIGRATION_SOURCE:-file://db/migrations}
+      CORS_ORIGINS: ${CORS_ORIGINS:-http://localhost:3100,http://localhost:3101}
+      COOKIE_SECRET: ${COOKIE_SECRET:-change_me}
+      AUTH_COOKIE_NAME: ${AUTH_COOKIE_NAME:-ptm_auth_token}
+      AUTH_REFRESH_COOKIE_NAME: ${AUTH_REFRESH_COOKIE_NAME:-ptm_refresh_token}
+      AUTH_LOGGED_IN_COOKIE_NAME: ${AUTH_LOGGED_IN_COOKIE_NAME:-logged_in}
+      AUTH_ACCESS_TOKEN_TTL_MINUTES: ${AUTH_ACCESS_TOKEN_TTL_MINUTES:-15}
+      AUTH_REFRESH_TOKEN_TTL_HOURS: ${AUTH_REFRESH_TOKEN_TTL_HOURS:-8760}
+      EMAIL_ADMIN: ${EMAIL_ADMIN:-}
+      RATE_LIMIT_MAX_REQUESTS: ${RATE_LIMIT_MAX_REQUESTS:-60}
+      RATE_LIMIT_WINDOW_MS: ${RATE_LIMIT_WINDOW_MS:-60000}
+      GOOGLE_CLIENT_ID: ${GOOGLE_CLIENT_ID:-}
+      GOOGLE_CLIENT_SECRET: ${GOOGLE_CLIENT_SECRET:-}
+      GOOGLE_REDIRECT_URI: ${GOOGLE_REDIRECT_URI:-http://localhost:9100/api/v1/auth/google/callback}
+      GOOGLE_ISSUER_URL: ${GOOGLE_ISSUER_URL:-https://accounts.google.com}
+      FRONTEND_URL: ${FRONTEND_URL:-http://localhost:3101/home}
+      BASEURL: ${BASEURL:-http://localhost:9100}
+    depends_on:
+      db:
+        condition: service_healthy
+    networks:
+      - ptm_network
+      - global_ptm_network
+    ports:
+      - "${APP_PORT:-9100}:${APP_PORT:-9100}"
+
+  db:
+    container_name: ptm_indonesia_be_db
+    image: postgres:18.4-alpine3.24
+    environment:
+      POSTGRES_DB: ${DB_NAME:-ptm_indonesia}
+      POSTGRES_USER: ${DB_USER:-postgres}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-postgres}
+      TZ: ${APP_TIMEZONE:-Asia/Jakarta}
+      PGTZ: ${DB_TIMEZONE:-Asia/Jakarta}
+    ports:
+      - "127.0.0.1:${DB_PORT}:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USER} -d ${DB_NAME}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+    networks:
+      - ptm_network
+    volumes:
+      - postgres_ptmindonesia:/var/lib/postgresql
+
+networks:
+  ptm_network:
+    driver: bridge
+  global_ptm_network:
+    external: true
+
+volumes:
+  postgres_ptmindonesia: {}

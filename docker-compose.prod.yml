@@ -1,0 +1,7 @@
+services:
+  app:
+    restart: always
+
+  db:
+    restart: always
+    

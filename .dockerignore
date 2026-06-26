@@ -1,0 +1,10 @@
+.env
+.git
+.gitignore
+.gocache
+logs
+tmp
+bin
+sample
+docker-compose*.yml
+.dockerignore

@@ -1,0 +1,9 @@
+.env
+.env.testing
+.gocache/
+logs/
+tmp/
+bin/
+.idea/
+.vscode/
+.DS_Store
