@@ -11,7 +11,13 @@ Aturan Umum:
 - Isi file .env harus sama seperti env.example (jangan menambahkan nilai sensitif ke repo).
 - Isi file .env.testing/env.testing hanya untuk konfigurasi testing lokal dan tidak boleh berisi credential sensitif/production; gunakan nilai dummy atau khusus testing.
 - kalau ada script yang sering duplicate utamakan buat helper
-- interface dan struct taruh di model
+- Jangan campur file logic panjang dengan banyak type dalam 1 file.
+  Jika file mulai membesar, pisahkan type/interface ke file yang lebih spesifik.
+- Type data-only taruh di `model`.
+  Contohnya: entity, DTO, request, response, payload, shared contract type, atau shape config yang hanya berisi data.
+- Struct atau interface yang implementation-specific boleh tetap di package masing-masing,
+  misalnya di `config`, `bootstrap`, `controllers`, `services`, `repository`, `helper`, atau `validation`,
+  asalkan tidak membuat file logic utama jadi panjang dan sulit dibaca.
 - Untuk Depedency Injection kita pakainya google wire
 - Untuk database migration kita pakainya golang-migration
 - Untuk perubahan config runtime/local development, jangan ubah 1 file saja.
