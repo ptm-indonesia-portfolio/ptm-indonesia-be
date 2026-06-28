@@ -1,0 +1,25 @@
+# Runtime and Environment Rules
+
+## Runtime dan Local Development
+
+- Untuk perubahan config runtime/local development, jangan ubah 1 file saja.
+  Wajib cek konsistensi minimal di `.env`, `.env.testing`, `env.example`, `docker-compose.yml`, dan kode config yang membaca env.
+- Jangan mengandalkan mount file `.env` di container sebagai requirement runtime.
+  Container dan aplikasi harus tetap bisa jalan dari environment variable; file `.env` hanya fallback untuk local bila memang dibutuhkan.
+- Untuk local development di Windows, pastikan tooling yang menghasilkan binary sementara seperti `air` punya konfigurasi yang kompatibel dengan Windows.
+- Tool auto reload untuk local development tidak boleh menjalankan migration atau seed otomatis, kecuali memang diminta user secara eksplisit.
+- Saat ubah startup/runtime behavior, pastikan aplikasi tetap memberi feedback yang jelas saat dijalankan lokal, minimal info bahwa server berhasil start dan bind ke address yang dipakai.
+
+## Environment dan Frontend-Backend Local Flow
+
+- Anggap semua environment non-development seperti production, staging, preprod, dan lainnya sebagai `production-like`.
+- Kalau perubahan menyentuh URL/origin/callback/auth frontend-backend:
+  wajib cek dan sinkronkan `APP_PORT`, `BASEURL`, `FRONTEND_URL`, `GOOGLE_REDIRECT_URI`, dan `CORS_ORIGINS`.
+- Jangan mengasumsikan origin frontend, callback URL, atau port yang aktif.
+  Selalu cek env/config yang dipakai project terkait sebelum mengubah auth, CORS, cookie, redirect, atau Docker.
+- Untuk perubahan auth/login/session/cookie pada local FE-BE, selalu pikirkan perilaku browser lintas origin:
+  CORS, cookie flags, callback URL, redirect URL, dan `withCredentials` harus konsisten.
+- Untuk cookie auth:
+  bedakan dengan jelas cookie yang hanya untuk backend (`HttpOnly`) dan cookie yang memang perlu dibaca frontend.
+- Perubahan config auth/cors/cookie tidak boleh berhenti di backend saja;
+  cek apakah docs, env, Docker, dan flow frontend yang relevan ikut konsisten.

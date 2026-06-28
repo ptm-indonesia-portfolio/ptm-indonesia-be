@@ -24,6 +24,10 @@
     "translation": "Akun ini tidak diizinkan untuk login."
   },
   {
+    "id": "error.forbidden_access",
+    "translation": "Hanya super admin yang dapat mengakses service ini."
+  },
+  {
     "id": "auth.google_login_url",
     "translation": "URL login Google berhasil dibuat."
   },
@@ -38,5 +42,45 @@
   {
     "id": "auth.logged_out",
     "translation": "Berhasil logout."
+  },
+  {
+    "id": "user.listed",
+    "translation": "Data user berhasil diambil."
+  },
+  {
+    "id": "user.created",
+    "translation": "User berhasil dibuat."
+  },
+  {
+    "id": "user.detail",
+    "translation": "Detail user berhasil diambil."
+  },
+  {
+    "id": "user.updated",
+    "translation": "User berhasil diperbarui."
+  },
+  {
+    "id": "user.deleted",
+    "translation": "User berhasil dihapus."
+  },
+  {
+    "id": "user.not_found",
+    "translation": "User tidak ditemukan."
+  },
+  {
+    "id": "user.email_exists",
+    "translation": "Email sudah digunakan."
+  },
+  {
+    "id": "user.invalid_id",
+    "translation": "ID user tidak valid."
+  },
+  {
+    "id": "user.invalid_status",
+    "translation": "Status user tidak valid."
+  },
+  {
+    "id": "user.invalid_sort",
+    "translation": "Parameter sort user tidak valid."
   }
 ]

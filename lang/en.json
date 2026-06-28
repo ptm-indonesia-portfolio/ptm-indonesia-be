@@ -24,6 +24,10 @@
     "translation": "This account is not allowed to log in."
   },
   {
+    "id": "error.forbidden_access",
+    "translation": "Only super admin can access this service."
+  },
+  {
     "id": "auth.google_login_url",
     "translation": "Google login URL generated successfully."
   },
@@ -38,5 +42,45 @@
   {
     "id": "auth.logged_out",
     "translation": "Logged out successfully."
+  },
+  {
+    "id": "user.listed",
+    "translation": "Users fetched successfully."
+  },
+  {
+    "id": "user.created",
+    "translation": "User created successfully."
+  },
+  {
+    "id": "user.detail",
+    "translation": "User fetched successfully."
+  },
+  {
+    "id": "user.updated",
+    "translation": "User updated successfully."
+  },
+  {
+    "id": "user.deleted",
+    "translation": "User deleted successfully."
+  },
+  {
+    "id": "user.not_found",
+    "translation": "User not found."
+  },
+  {
+    "id": "user.email_exists",
+    "translation": "Email is already used."
+  },
+  {
+    "id": "user.invalid_id",
+    "translation": "Invalid user id."
+  },
+  {
+    "id": "user.invalid_status",
+    "translation": "Invalid user status."
+  },
+  {
+    "id": "user.invalid_sort",
+    "translation": "Invalid user sort."
   }
 ]

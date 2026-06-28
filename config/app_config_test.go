@@ -15,6 +15,7 @@ func TestNewAppConfigUsesEnvironmentVariablesWithoutDotEnvFile(t *testing.T) {
 	t.Setenv("DB_NAME", "ptm_indonesia")
 	t.Setenv("DB_USER", "postgres")
 	t.Setenv("DB_PASSWORD", "postgres")
+	t.Setenv("EMAIL_ADMIN", "admin@example.com")
 
 	cfg, err := NewAppConfig()
 	require.NoError(t, err)
@@ -24,6 +25,7 @@ func TestNewAppConfigUsesEnvironmentVariablesWithoutDotEnvFile(t *testing.T) {
 }
 
 func TestNewAppConfigReturnsErrorWhenExplicitConfigFileIsMissing(t *testing.T) {
+	t.Setenv("EMAIL_ADMIN", "admin@example.com")
 	t.Setenv("ENV_FILE_PATH", filepath.Join(t.TempDir(), "missing.env"))
 
 	_, err := NewAppConfig()
@@ -32,6 +34,7 @@ func TestNewAppConfigReturnsErrorWhenExplicitConfigFileIsMissing(t *testing.T) {
 }
 
 func TestNewAppConfigIncludesFrontendOriginInCORSOrigins(t *testing.T) {
+	t.Setenv("EMAIL_ADMIN", "admin@example.com")
 	t.Setenv("CORS_ORIGINS", "http://localhost:3100")
 	t.Setenv("FRONTEND_URL", "http://localhost:3101/home")
 
@@ -40,4 +43,12 @@ func TestNewAppConfigIncludesFrontendOriginInCORSOrigins(t *testing.T) {
 
 	assert.Contains(t, cfg.App.CORSOrigins, "http://localhost:3100")
 	assert.Contains(t, cfg.App.CORSOrigins, "http://localhost:3101")
+}
+
+func TestNewAppConfigReturnsErrorWhenEmailAdminIsMissing(t *testing.T) {
+	t.Setenv("EMAIL_ADMIN", "   ")
+
+	_, err := NewAppConfig()
+	require.Error(t, err)
+	assert.Contains(t, err.Error(), "EMAIL_ADMIN is required")
 }

@@ -1,0 +1,27 @@
+# Docs and Frontend Rules
+
+## Dokumentasi API
+
+- Jangan asal membuat file `.md` karena repo public dan harus menghindari info sensitif.
+- Boleh membuat atau mengubah docs hanya untuk dokumentasi API di folder `docs`.
+- Jika tambah endpoint baru: wajib buat file docs baru khusus modul tersebut di folder `docs`; jangan menambahkannya ke file docs modul lain.
+- Jika ubah endpoint yang sudah ada: wajib update file docs modul terkait.
+- Contoh curl tidak perlu header Cookie.
+- Header minimal yang ditulis di docs: `Accept` dan `Content-Type` bila perlu.
+
+## Sudut Pandang Frontend
+
+- Anggap docs API di folder `docs` sebagai dokumentasi untuk frontend/integrator.
+- Tulis docs dengan fokus ke kontrak yang dibutuhkan client:
+  endpoint, method, header, query/body param, nilai yang diizinkan, default yang relevan untuk client, dan bentuk response/error.
+- Jangan menuliskan detail internal implementasi backend yang tidak dibutuhkan frontend,
+  misalnya tie-breaker sorting internal, strategi query DB, nama helper/service internal, atau alasan teknis internal backend,
+  kecuali detail tersebut memang mengubah cara client memanggil API atau membaca response.
+
+## Laporan Smoke Test Untuk Frontend
+
+- Anggap file `sample/issue_test.md` juga sebagai laporan untuk frontend.
+- Saat menulis `sample/issue_test.md`, jelaskan temuan dengan bahasa yang dipahami frontend.
+- Fokuskan isi laporan pada perilaku UI, kontrak API yang terlihat dari docs, dan gap dokumentasi yang mempengaruhi implementasi frontend.
+- Jangan menulis referensi ke file/struct/backend internal di `sample/issue_test.md`,
+  kecuali user memang meminta detail teknis backend tersebut secara eksplisit.

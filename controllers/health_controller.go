@@ -27,10 +27,6 @@ func NewHealthController(
 	}
 }
 
-func (h *HealthController) Register(router fiber.Router) {
-	router.Get("/health", h.Check)
-}
-
 func (h *HealthController) Check(c fiber.Ctx) error {
 	locale := h.localizer.Resolve(c.Get("Accept-Language"))
 	response := h.healthService.Check(context.Background())

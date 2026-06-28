@@ -37,15 +37,6 @@ func NewAuthController(
 	}
 }
 
-func (a *AuthController) Register(router fiber.Router) {
-	auth := router.Group("/auth")
-	auth.Get("/google/login", a.GoogleLogin)
-	auth.Get("/google/callback", a.GoogleCallback)
-	auth.Post("/refresh", a.Refresh)
-	auth.Get("/me", a.Me)
-	auth.Post("/logout", a.Logout)
-}
-
 func (a *AuthController) GoogleLogin(c fiber.Ctx) error {
 	locale := a.localizer.Resolve(c.Get("Accept-Language"))
 	state, loginURL, err := a.authService.PrepareGoogleLogin(c.Context())

@@ -1,0 +1,38 @@
+# API Contract Rules
+
+## Validation dan Error
+
+- Untuk validasi pakai `github.com/go-playground/validator`.
+- Semua validation error harus status `400`.
+- Status code adalah kontrak penting project ini, gunakan standar berikut:
+  - `200`: request berhasil
+  - `400`: error validasi
+  - `401`: token expired atau token tidak valid
+  - `403`: access forbidden
+  - `429`: rate limit
+  - `500`: internal server error
+- Business validation ikut kontrak validasi kecuali ada aturan khusus yang ditulis eksplisit.
+  Contoh: duplicate email, nilai status tidak valid, atau input bisnis lain yang ditolak harus masuk `400`, bukan `409`.
+- Bentuk error validation harus seperti ini:
+
+```json
+{
+  "errors": [
+    "The email is required!",
+    "The name is required!",
+    "The role is required!"
+  ]
+}
+```
+
+## Pagination dan Sorting
+
+- Kalau ada endpoint list dengan paging: wajib ada sorting stabil dengan `id desc` untuk mencegah data pindah halaman atau duplikasi.
+- Jika sudah ada sort utama lain: `id desc` tetap dipakai sebagai tie-breaker.
+
+## Upload File
+
+- Untuk update yang ada upload file: request body wajib punya `status_file`.
+- `status_file = 0`: tidak ada perubahan file.
+- `status_file = 1` + ada upload file: ganti file.
+- `status_file = 1` + tidak ada upload file: hapus file.

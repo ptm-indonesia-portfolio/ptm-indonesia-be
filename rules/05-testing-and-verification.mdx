@@ -1,0 +1,22 @@
+# Testing and Verification Rules
+
+## Verifikasi Umum
+
+- Jika mengubah Docker, env, CORS, auth, session, cookie, redirect, atau startup config:
+  minimal jalankan `go test ./...`.
+- Jika perubahan menyentuh login, refresh token, cookie, auth middleware, atau Google auth:
+  jalankan juga integration test yang relevan.
+- Jika perubahan menyentuh runtime/local config:
+  verifikasi health endpoint dan, bila relevan, header CORS/origin yang aktif.
+
+## Smoke Test
+
+- Smoke test tidak boleh dijalankan otomatis setelah perubahan code.
+- Jalankan smoke test hanya jika user memberi instruksi eksplisit untuk smoke test.
+- Jangan membuat otomatisasi smoke test sebagai default workflow; tunggu perintah user.
+
+## Saat Hasil Browser Berbeda Dengan Test Backend
+
+- Jika hasil smoke test browser berbeda dengan hasil unit/integration test backend, verifikasi dulu runtime yang benar-benar aktif.
+- Cek proses atau container yang melayani port aktif sebelum menyimpulkan bug masih ada.
+- Pastikan binary, container, atau watcher yang sedang hidup memang sudah memuat perubahan terbaru sebelum retest browser.

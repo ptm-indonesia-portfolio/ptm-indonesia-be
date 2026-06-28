@@ -1,96 +1,32 @@
-Context7:
-- Wajib pakai Context7 saat butuh pembuatan kode, langkah setup/konfigurasi, atau dokumentasi library/API.
+# Project Rules
 
-Aturan Umum:
-- Jangan running aplikasi (server) karena sudah dijalankan; cukup jalankan integration test atau unit test yang relevan, kalau ada error langsung diperbaiki.
-- kalau buat service baru utamakan bikin dokumentasi terlebih dahulu di folder docs
-- Pattern lebih baik banyak file yang spesifik dan mudah di-maintain/debug.
-- Hindari penggunaan console yang tidak perlu karena cepat penuh log docker; kecuali console untuk error.
-- Field di DB gunakan snake_case (contoh created_at)
-- Kalau menambahkan table baru wajib tambahkan field created_by dan updated_by (default 0 untuk id by system).
-- Isi file .env harus sama seperti env.example (jangan menambahkan nilai sensitif ke repo).
-- Isi file .env.testing/env.testing hanya untuk konfigurasi testing lokal dan tidak boleh berisi credential sensitif/production; gunakan nilai dummy atau khusus testing.
-- kalau ada script yang sering duplicate utamakan buat helper
-- Jangan campur file logic panjang dengan banyak type dalam 1 file.
-  Jika file mulai membesar, pisahkan type/interface ke file yang lebih spesifik.
-- Type data-only taruh di `model`.
-  Contohnya: entity, DTO, request, response, payload, shared contract type, atau shape config yang hanya berisi data.
-- Struct atau interface yang implementation-specific boleh tetap di package masing-masing,
-  misalnya di `config`, `bootstrap`, `controllers`, `services`, `repository`, `helper`, atau `validation`,
-  asalkan tidak membuat file logic utama jadi panjang dan sulit dibaca.
-- Untuk Depedency Injection kita pakainya google wire
-- Untuk database migration kita pakainya golang-migration
-- Untuk perubahan config runtime/local development, jangan ubah 1 file saja.
-  Wajib cek konsistensi minimal di `.env`, `.env.testing`, `env.example`, `docker-compose.yml`, dan kode config yang membaca env.
-- Jangan mengandalkan mount file `.env` di container sebagai requirement runtime.
-  Container dan aplikasi harus tetap bisa jalan dari environment variable; file `.env` hanya fallback untuk local bila memang dibutuhkan.
-- Kalau perubahan menyentuh URL/origin/callback/auth frontend-backend:
-  wajib cek dan sinkronkan `APP_PORT`, `BASEURL`, `FRONTEND_URL`, `GOOGLE_REDIRECT_URI`, dan `CORS_ORIGINS`.
-- Jangan mengasumsikan origin frontend, callback URL, atau port yang aktif.
-  Selalu cek env/config yang dipakai project terkait sebelum mengubah auth, CORS, cookie, redirect, atau Docker.
-- Untuk local development di Windows, pastikan tooling yang menghasilkan binary sementara (contoh `air`) punya konfigurasi yang kompatibel dengan Windows.
-- Tool auto reload untuk local development tidak boleh menjalankan migration atau seed otomatis, kecuali memang diminta user secara eksplisit.
-- Saat ubah startup/runtime behavior, pastikan aplikasi tetap memberi feedback yang jelas saat dijalankan lokal
-  (minimal info bahwa server berhasil start dan bind ke address yang dipakai).
+Gunakan file ini sebagai ringkasan cepat. Aturan detail dipisah ke folder `rules`.
 
-Logging:
-- Untuk logging kita pakainya library Logrus dan untuk logging kita pakai file
-- logging level minimunnya error agar log file tidak cepat penuh
-- Untuk formatnya tolong pakai json formatter
+## Prioritas Penting
 
-Pagination dan Sorting:
-- Kalau ada endpoint list dengan paging: wajib ada sorting stabil dengan id desc (untuk mencegah data pindah halaman/duplikasi).
-- Jika sudah ada sort utama lain: id desc tetap dipakai sebagai tie-breaker.
+- Wajib pakai Context7 saat butuh pembuatan kode yang bergantung pada library/API, langkah setup/konfigurasi, atau dokumentasi library/API.
+- Jangan menjalankan aplikasi/server secara otomatis. Anggap project biasanya sudah dijalankan user; cukup jalankan test yang relevan kecuali user meminta hal lain.
+- Smoke test browser/manual tidak boleh dijalankan otomatis setelah perubahan. Jalankan hanya jika user memberi instruksi eksplisit untuk smoke test.
+- Status code adalah kontrak penting project ini. Validation error dan business validation harus mengikuti mapping status code yang sudah ditetapkan di rules.
+- Jika menambah service baru, utamakan buat/update dokumentasi API modul tersebut di folder `docs` terlebih dahulu.
+- Jika controller mulai panjang karena route registration, grouping, atau middleware, pisahkan ke folder/package `routes`.
 
-Validation dan Error:
-- Untuk validasi kita pakai github.com/go-playground/validator
-- Semua validation error harus status 400.
-- Bentuk error validation harus seperti ini:
-{
-  "errors": [
-    "The email is required!",
-    "The name is required!",
-    "The role is required!"
-  ]
-}
+## Index Rules
 
-Upload File:
-- Untuk update yang ada upload file: request body wajib punya status_file.
-- status_file = 0: tidak ada perubahan file.
-- status_file = 1 + ada upload file: ganti file.
-- status_file = 1 + tidak ada upload file: hapus file.
+- `rules/01-general.mdx`
+  Aturan umum coding, struktur file, logging, DI, migration, naming, dan pola maintainability.
+- `rules/02-api-contract.mdx`
+  Kontrak API penting: validation, status code, pagination, sorting, dan upload file.
+- `rules/03-docs-and-frontend.mdx`
+  Aturan penulisan docs API dan laporan yang dibaca frontend/integrator.
+- `rules/04-runtime-and-environment.mdx`
+  Aturan env, Docker, auth/cookie/CORS lokal, dan runtime development.
+- `rules/05-testing-and-verification.mdx`
+  Kapan harus menjalankan test, aturan smoke test, dan cara verifikasi runtime aktif.
+- `rules/06-architecture.mdx`
+  Tanggung jawab folder/package dan pemisahan struktur codebase.
 
-Dokumentasi API:
-- Jangan asal membuat file .md (repo public, hindari info sensitif).
-- Boleh membuat/mengubah docs hanya untuk dokumentasi API di folder docs.
-- Jika tambah endpoint baru: wajib buat file docs baru khusus modul tersebut di folder docs (jangan menambahkannya ke file docs modul lain).
-- Jika ubah endpoint yang sudah ada: wajib update file docs modul terkait (contoh curl tanpa Cookie; header minimal Accept + Content-Type bila perlu).
+## Catatan
 
-Environment:
-- Anggap semua environment non-development (production, staging, preprod, dll) sebagai "production-like".
-- Untuk perubahan auth/login/session/cookie pada local FE-BE, selalu pikirkan perilaku browser lintas origin:
-  CORS, cookie flags, callback URL, redirect URL, dan `withCredentials` harus konsisten.
-- Untuk cookie auth:
-  bedakan dengan jelas cookie yang hanya untuk backend (`HttpOnly`) dan cookie yang memang perlu dibaca frontend.
-- Perubahan config auth/cors/cookie tidak boleh berhenti di backend saja;
-  cek apakah docs, env, Docker, dan flow frontend yang relevan ikut konsisten.
-
-Verifikasi:
-- Jika mengubah Docker, env, CORS, auth, session, cookie, redirect, atau startup config:
-  minimal jalankan `go test ./...`.
-- Jika perubahan menyentuh login, refresh token, cookie, auth middleware, atau Google auth:
-  jalankan juga integration test yang relevan.
-- Jika perubahan menyentuh runtime/local config:
-  verifikasi health endpoint dan, bila relevan, header CORS/origin yang aktif.
-
-Arsitektur dan Struktur Folder:
-- docs: dokumentasi API (contoh curl). Tidak perlu pakai header Cookie.
-- config: untuk config yang dibutuhkan
-- controllers: untuk controller
-- helper: untuk helper
-- lang: untuk data multi language
-- model: untuk entity, DTO, request, response, custom constraint, type sets atau apapun untuk tipe data yang biasanya isinya struct atau interface
-- repository: untuk yang berhubungan query db
-    - contract: untuk contractnya
-- services: untuk service
-- validation: untuk file yang berhubungan validation
+- File `AGENTS.md` ini tetap dipakai sebagai ringkasan cepat.
+- Detail aturan harus dirujuk dari file `rules/*.mdx`.

@@ -17,11 +17,6 @@ func main() {
 		os.Exit(1)
 	}
 
-	if cfg.Admin.Email == "" {
-		_, _ = fmt.Fprintln(os.Stderr, "EMAIL_ADMIN is required")
-		os.Exit(1)
-	}
-
 	db, cleanup, err := config.NewDatabase(cfg)
 	if err != nil {
 		_, _ = fmt.Fprintf(os.Stderr, "open database: %v\n", err)
@@ -33,16 +28,18 @@ func main() {
 		Name:      "Super Admin",
 		Email:     cfg.Admin.Email,
 		Status:    model.UserStatusSuperAdmin,
+		StatusRow: model.ActiveUserStatusRow(),
 		CreatedBy: 0,
 		UpdatedBy: 0,
 	}
 
 	if err := db.
 		Clauses(clause.OnConflict{
-			Columns: []clause.Column{{Name: "email"}},
+			Columns: []clause.Column{{Name: "email"}, {Name: "status_row"}},
 			DoUpdates: clause.AssignmentColumns([]string{
 				"name",
 				"status",
+				"status_row",
 				"updated_by",
 				"updated_at",
 			}),

@@ -68,9 +68,12 @@ func InitializeHTTPApplication() (*HTTPApplication, func(), error) {
 	var refreshTokenManagerContract servicesContract.RefreshTokenManager = refreshTokenManager
 	authService := services.NewAuthService(googleOIDCClientContract, sessionTokenManagerContract, refreshTokenManagerContract, userRepositoryContract, refreshTokenRepositoryContract)
 	var authServiceContract servicesContract.AuthService = authService
+	userService := services.NewUserService(appConfig, userRepositoryContract)
+	var userServiceContract servicesContract.UserService = userService
 	healthController := controllers.NewHealthController(healthServiceContract, responder, localizer)
 	authController := controllers.NewAuthController(appConfig, authServiceContract, responder, localizer)
-	app := NewFiberApp(appConfig, logger, localizer, requestValidator, healthController, authController)
+	userController := controllers.NewUserController(appConfig, authServiceContract, userServiceContract, responder, localizer)
+	app := NewFiberApp(appConfig, logger, localizer, requestValidator, healthController, authController, userController)
 	httpApplication := NewHTTPApplication(appConfig, app, logger)
 
 	cleanupAll := func() {

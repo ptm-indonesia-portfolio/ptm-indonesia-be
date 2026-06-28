@@ -111,7 +111,7 @@ func NewAppConfig() (*AppConfig, error) {
 		return nil, fmt.Errorf("config file not found: %s", configFilePath)
 	}
 
-	return &AppConfig{
+	cfg := &AppConfig{
 		App: AppSection{
 			Name:              v.GetString("APP_NAME"),
 			Environment:       v.GetString("APP_ENV"),
@@ -168,7 +168,13 @@ func NewAppConfig() (*AppConfig, error) {
 		Migration: MigrationSection{
 			Source: v.GetString("MIGRATION_SOURCE"),
 		},
-	}, nil
+	}
+
+	if strings.TrimSpace(cfg.Admin.Email) == "" {
+		return nil, fmt.Errorf("EMAIL_ADMIN is required")
+	}
+
+	return cfg, nil
 }
 
 func (c *AppConfig) Address() string {

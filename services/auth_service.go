@@ -84,7 +84,7 @@ func (s *AuthService) AuthenticateWithGoogle(ctx context.Context, code string, s
 		return nil, err
 	}
 
-	if user.Status == model.UserStatusNotActive {
+	if !model.IsLoginAllowedUserStatus(user.Status) {
 		return nil, ErrAuthForbidden
 	}
 
@@ -139,7 +139,7 @@ func (s *AuthService) RefreshSession(ctx context.Context, refreshToken string) (
 		return nil, err
 	}
 
-	if user.Status == model.UserStatusNotActive {
+	if !model.IsLoginAllowedUserStatus(user.Status) {
 		return nil, ErrAuthForbidden
 	}
 
@@ -187,7 +187,7 @@ func (s *AuthService) GetCurrentUser(ctx context.Context, token string) (*model.
 		return nil, err
 	}
 
-	if user.Status == model.UserStatusNotActive {
+	if !model.IsLoginAllowedUserStatus(user.Status) {
 		return nil, ErrAuthForbidden
 	}
 

@@ -7,6 +7,7 @@ import (
 	"ptm-indonesia/controllers"
 	"ptm-indonesia/helper"
 	"ptm-indonesia/model"
+	"ptm-indonesia/routes"
 	"ptm-indonesia/validation"
 
 	"github.com/go-playground/validator/v10"
@@ -22,6 +23,7 @@ func NewFiberApp(
 	requestValidator *validation.RequestValidator,
 	healthController *controllers.HealthController,
 	authController *controllers.AuthController,
+	userController *controllers.UserController,
 ) *fiber.App {
 	app := fiber.New(fiber.Config{
 		AppName:         cfg.App.Name,
@@ -56,15 +58,14 @@ func NewFiberApp(
 
 	app.Use(cors.New(cors.Config{
 		AllowOrigins:     cfg.App.CORSOrigins,
-		AllowMethods:     []string{fiber.MethodGet, fiber.MethodPost, fiber.MethodOptions},
+		AllowMethods:     []string{fiber.MethodGet, fiber.MethodPost, fiber.MethodPut, fiber.MethodDelete, fiber.MethodOptions},
 		AllowHeaders:     []string{"Origin", "Content-Type", "Accept", "Authorization"},
 		AllowCredentials: true,
 	}))
 
 	api := app.Group("/api/v1")
 	api.Use(helper.NewRateLimiter(cfg, localizer))
-	healthController.Register(api)
-	authController.Register(api)
+	routes.RegisterAPIRoutes(api, healthController, authController, userController)
 
 	return app
 }

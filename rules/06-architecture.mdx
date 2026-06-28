@@ -1,0 +1,21 @@
+# Architecture and Folder Structure Rules
+
+## Struktur Folder
+
+- `docs`: dokumentasi API seperti contoh curl. Tidak perlu pakai header Cookie.
+- `config`: konfigurasi yang dibutuhkan aplikasi.
+- `routes`: pendaftaran route, grouping endpoint, dan middleware per modul.
+- `controllers`: handler/controller endpoint; jangan menampung route registration yang panjang.
+- `helper`: helper utilities.
+- `lang`: data multi language.
+- `model`: entity, DTO, request, response, custom constraint, type sets, atau tipe data yang biasanya berupa struct/interface data-only.
+- `repository`: logic yang berhubungan dengan query DB.
+- `repository/contract`: contract repository.
+- `services`: service/business logic.
+- `validation`: file yang berhubungan dengan validation.
+
+## Pemisahan Controller dan Routes
+
+- Jika file controller mulai membesar karena campur route registration, grouping, middleware, dan handler:
+  pisahkan pendaftaran route ke folder/package `routes`.
+- `controllers` fokus untuk handler endpoint dan middleware handler-level yang memang milik modul tersebut.

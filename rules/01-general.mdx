@@ -1,0 +1,29 @@
+# General Rules
+
+## Context7
+
+- Wajib pakai Context7 saat butuh pembuatan kode, langkah setup/konfigurasi, atau dokumentasi library/API.
+
+## Aturan Umum
+
+- Jangan running aplikasi (server) karena biasanya sudah dijalankan user; cukup jalankan integration test atau unit test yang relevan, kalau ada error langsung diperbaiki.
+- Kalau buat service baru utamakan bikin dokumentasi terlebih dahulu di folder `docs`.
+- Pattern lebih baik banyak file yang spesifik dan mudah di-maintain/debug.
+- Hindari penggunaan console yang tidak perlu karena cepat penuh log docker; kecuali console untuk error.
+- Field di DB gunakan `snake_case` seperti `created_at`.
+- Kalau menambahkan table baru wajib tambahkan field `created_by` dan `updated_by` dengan default `0` untuk id by system.
+- Isi file `.env` harus sama seperti `env.example`; jangan menambahkan nilai sensitif ke repo.
+- Isi `.env.testing`/`env.testing` hanya untuk konfigurasi testing lokal dan tidak boleh berisi credential sensitif/production; gunakan nilai dummy atau khusus testing.
+- Kalau ada script yang sering duplicate utamakan buat helper.
+- Jangan campur file logic panjang dengan banyak type dalam 1 file. Jika file mulai membesar, pisahkan type/interface ke file yang lebih spesifik.
+- Type data-only taruh di `model`.
+  Contoh: entity, DTO, request, response, payload, shared contract type, atau shape config yang hanya berisi data.
+- Struct atau interface yang implementation-specific boleh tetap di package masing-masing seperti `config`, `bootstrap`, `controllers`, `services`, `repository`, `helper`, atau `validation`, asalkan tidak membuat file logic utama jadi panjang dan sulit dibaca.
+- Untuk Dependency Injection pakai `google wire`.
+- Untuk database migration pakai `golang-migration`.
+
+## Logging
+
+- Logging pakai library Logrus dan output ke file.
+- Logging level minimum `error` agar log file tidak cepat penuh.
+- Format logging gunakan JSON formatter.
